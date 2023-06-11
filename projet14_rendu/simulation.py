@@ -196,12 +196,12 @@ def debit(MASSE_PASSEE, nb_temps, pas_de_temps):
             DEBIT[nb_temps-1] = (3*MASSE_PASSEE[nb_temps-1]-4*MASSE_PASSEE[nb_temps-2] + MASSE_PASSEE[nb_temps-3])/(2*pas_de_temps)
         else:
             DEBIT[i] = (MASSE_PASSEE[i+1] - MASSE_PASSEE[i-1])/(2*pas_de_temps)
- 
- 
+
+
     TIME = np.array([i for i in range(nb_temps)])
     
     # Intervalle mobile pour affiné les données
-    IntervalleMobile = nb_temps//10000 #intervalle mobile
+    IntervalleMobile = nb_temps//2 #intervalle mobile
     
     DebitMobile = np.zeros(nb_temps+1-IntervalleMobile+1)
     MasseMobile = np.zeros(nb_temps+1-IntervalleMobile+1)
@@ -225,8 +225,8 @@ def debit(MASSE_PASSEE, nb_temps, pas_de_temps):
     ax1.grid(alpha=0.1)
     
     
-    start = 100  # index de début de l'intervalle
-    end = int(len(TempsMobile)*1/2)  # index de fin de l'intervalle
+    start = 0  # index de début de l'intervalle
+    end = int(len(TempsMobile)*3/5)  # index de fin de l'intervalle
 
     # réaliser une régression linéaire sur l'intervalle spécifié
     coeffs = np.polyfit(TempsMobile[start:end], DebitMobile[start:end], 1)  # 1 pour une régression linéaire
@@ -375,7 +375,7 @@ def derivee_allongement_grain_paroi(vitesse_i, vecteur_paroi):
 
 def maj_grille(GRILLE, POSITION, indice_temps, limite_gauche, limite_bas, mise_a_jour, c):
     """
-    Fonction d'actulaisation de la grille.
+    Fonction d'actualisation de la grille.
 
     Paramètres
     ==========
@@ -396,7 +396,7 @@ def maj_grille(GRILLE, POSITION, indice_temps, limite_gauche, limite_bas, mise_a
     for grain, maj in enumerate(mise_a_jour):
         if maj:
             # On associe à chaque case de la grille les grains qui sont dans cette case
-            # Probleme car pos_case peut etre negatif pour ca on déplace le repere
+            # Problème car pos_case peut être negatif pour ca on déplace le repere
                 pos_case = (int((POSITION[indice_temps, grain, 0] + limite_gauche)/c), int((POSITION[indice_temps,grain,1]+ limite_bas)/c))
                 GRILLE[pos_case[0], pos_case[1], grain] = True
 
@@ -675,7 +675,7 @@ def resultante_et_actualisation_2(activatebox, coefficient_frottement, mise_a_jo
                             
                             # Effort tangentiel:
                             Ft = -raideur_tangentielle * allongement_tangentiel
-                             #Amortissement:
+                            #Amortissement:
                             #derivee_amortissement = derivee_allongement_grain_paroi(vitesse_grain1, vecteur_tangent_bac)
                             #force_resultante += -amortissement_grain1 * derivee_amortissement * vecteur_tangent_bac
                             # Glissement
@@ -784,7 +784,7 @@ if __name__ == "__main__":
     # TEMPS
     temps = 0
     indice_temps = 0
-    pas_de_temps = np.sqrt(np.min(MASSE)/raideur_normale)*0.15#s
+    pas_de_temps = np.sqrt(np.min(MASSE)/raideur_normale)*0.1#s
     duree_simulation = app.dureeSimulation #s
     nb_temps = int(duree_simulation/pas_de_temps)
 #-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -793,7 +793,7 @@ if __name__ == "__main__":
     limite_haut = app.limite_haut #m
     limite_gauche = app.limite_gauche #m
     limite_droite = app.limite_droite #m
-    coefficient_frottement = 0.1
+    coefficient_frottement = 0.2
     # Définition de la grille
     c = 5*rayon #pas d'espace de la grille en m
     # On définit une grille pour discrétiser l'espace selon le pas d'espace c, a chaque case on met la liste des grains qui sont dans cette case
@@ -887,9 +887,7 @@ if __name__ == "__main__":
 
     # Boucle principale
     print("Simulation en cours...")
-
     start_time = time.time()
-    ancien_temps = temps
     for indice_temps in tqdm(range(1, nb_temps)):
         # Actualisation du temps
         temps += pas_de_temps
