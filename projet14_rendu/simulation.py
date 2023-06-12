@@ -14,17 +14,10 @@ import matplotlib.cm as cm
 import matplotlib.colors as colors
 from numba import jit
 
-"""
-TO DO LIST:
-- LE ROULEMENT
-- LE TABLEAU POUR LES VECTEUR NORMAUX ETC...
-"""
-
 #-------------------------------------------------------------------------------------------------------------------------------------------#
 #-----------------------------------------------------------AFFICHAGE-----------------------------------------------------------------------#
 #-------------------------------------------------------------------------------------------------------------------------------------------#
 
- 
 
 def trajectoire(POSITION, nb_grains, Agauche, Cgauche, Adroite, Cdroite, paroiGauche, paroiDroite, debut_du_trou, hauteur_bac, largeur_bac_gauche, limite_gauche, limite_droite):
     """
@@ -62,6 +55,7 @@ def trajectoire(POSITION, nb_grains, Agauche, Cgauche, Adroite, Cdroite, paroiGa
     plt.ylim([limite_bas, limite_haut])
 
     ax1.set_aspect('equal')
+    ax1.set_title("Trajectoire de chaque grain?", color="white")
     ax1.set_facecolor('#222831') # On définit la couleur de fond de la figure
     ax1.tick_params(axis='x', colors='white')
     ax1.tick_params(axis='y', colors='white')
@@ -70,8 +64,7 @@ def trajectoire(POSITION, nb_grains, Agauche, Cgauche, Adroite, Cdroite, paroiGa
     ax1.xaxis.label.set_color('#EEEEEE')
     ax1.grid(alpha=0.1)
 
-    plt.legend()
-    plt.show()
+    plt.show(block=False)
 
 
 
@@ -240,7 +233,7 @@ def debit(MASSE_PASSEE, nb_temps, pas_de_temps):
 
     
     plt.legend()
-    plt.show()
+    plt.show(block=False)
     
     fig2, ax2 = plt.subplots()
     ax2.plot(TIME, DEBIT, color='black', lw=1, label="débit massique instantané(brut)")
@@ -249,7 +242,7 @@ def debit(MASSE_PASSEE, nb_temps, pas_de_temps):
     ax2.set_title("Débit massique instantané.")
     ax2.grid(alpha=0.1)
     plt.legend()
-    plt.show()
+    plt.show(block=False)
     
     fig3, ax3 = plt.subplots()
     ax3.plot(TIME, MASSE_PASSEE, color='black', lw=1, label="masse passée au cours du temps(brut)")
@@ -258,7 +251,7 @@ def debit(MASSE_PASSEE, nb_temps, pas_de_temps):
     ax3.set_title("Masse passé au cours du temps.")
     ax3.grid(alpha=0.1)
     plt.legend()
-    plt.show()
+    plt.show(block=False)
 
 
 
@@ -779,7 +772,7 @@ if __name__ == "__main__":
     raideur_normale = rho #N/m
     raideur_tangentielle = 1/2*raideur_normale #N/m
     coefficient_trainee = 0.47
-    AMORTISSEMENT = np.sqrt(raideur_normale*MASSE)*0.12
+    AMORTISSEMENT = np.sqrt(raideur_normale*MASSE)*0.1
 #-----------------------------------------------------------------------------------------------------------------------------------------------
     # TEMPS
     temps = 0
@@ -793,7 +786,7 @@ if __name__ == "__main__":
     limite_haut = app.limite_haut #m
     limite_gauche = app.limite_gauche #m
     limite_droite = app.limite_droite #m
-    coefficient_frottement = 0.2
+    coefficient_frottement = 0.1
     # Définition de la grille
     c = 5*rayon #pas d'espace de la grille en m
     # On définit une grille pour discrétiser l'espace selon le pas d'espace c, a chaque case on met la liste des grains qui sont dans cette case
@@ -812,7 +805,7 @@ if __name__ == "__main__":
     # VARIABLE POUR LE DEBIT
     MASSE_PASSEE = np.zeros(nb_temps, dtype=np.float64)
 
-    mise_a_jour = np.array([True for i in range(nb_grains)], dtype=bool) + True  #liste qui permet de savoir si on doit mettre à jour le grain ou pas
+    mise_a_jour = np.array([True for i in range(nb_grains)], dtype=bool) #liste qui permet de savoir si on doit mettre à jour le grain ou pas
 #-----------------------------------------------------------------------------------------------------------------------------------------------
     # SILO:
     # Definition bac de réception
